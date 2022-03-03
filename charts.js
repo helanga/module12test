@@ -59,29 +59,29 @@ function buildCharts(sample) {
   d3.json("samples.json").then((data) => {
     // 3. Create a variable that holds the samples array. 
         var samples = data.samples;
-        var metadata = data.metadat;
+        var metadata = data.metadata;
         
     // 4. Create a variable that filters the samples for the object with the desired sample number.
         var filteredSample = samples.filter(sampleName => sampleName.id == sample)[0]
     //  5. Create a variable that holds the first sample in the array.
-        var filteredMetaSample = metadata.filter(sampleName => sampleName.id == sample)[0]
+        //var filteredMetaSample = metadata.filter(sampleName => sampleName.id == sample)[0]
 
 
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
         let otu_ids = filteredSample.otu_ids
-        let otu_labels = filteredSample.otu_lables
+        let otu_labels = filteredSample.otu_labels
         let sample_values = filteredSample.sample_values
 
         console.log(otu_ids)
         console.log(otu_labels)
-        console.lof(sample_values)
+        console.log(sample_values)
 
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
 
      var yticks = otu_ids.slice(0,10).map(otuID => 'OTU${otuID}').reverse()
-
+      console.log(yticks)
     // 8. Create the trace for the bar chart. 
     var barData = [
       {
@@ -90,7 +90,7 @@ function buildCharts(sample) {
         text:otu_labels.slice(0,10).reverse(),
         type: 'bar',
         orientation: 'h',
-        width:0.6,
+        //width:0.6,
         marker:{color:'(55,83,109)'}
       },
     ];
@@ -99,23 +99,23 @@ function buildCharts(sample) {
       title: 'top 10 OTU',
 
       xaxis:{
-        tickangle:0,
-        zeroline:true,
+        //tickangle:0,
+        //zeroline:true,
         title:"Sample Value",
       },
       yaxis:{
-        zeroline:true,
-        gridwidth:1,
+        //zeroline:true,
+        //gridwidth:1,
         title:"OTU ID"
       },
-      height:370,
-      width:750,
-      margin:{t:40,l:90,b:35,r:20},
-      barmode:'stack',
-      paper_bgcolor: "lavender",
+      //height:370,
+      //width:750,
+      margin:{t:100,l:100,b:100,r:100},
+      //barmode:'stack',
+      //paper_bgcolor: "lavender",
 
     };
     // 10. Use Plotly to plot the data with the layout. 
-    Plotly.newPlot('bar',data,layout);
+    Plotly.newPlot("bar",barData,barLayout);
   });
 }
