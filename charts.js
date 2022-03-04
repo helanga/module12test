@@ -54,38 +54,38 @@ function buildMetadata(sample) {
 }
 
 // 1. Create the buildCharts function.
-function buildCharts(sample) {
+function buildBarCharts(sample) {
   // 2. Use d3.json to load and retrieve the samples.json file 
   d3.json("samples.json").then((data) => {
     // 3. Create a variable that holds the samples array. 
         var samples = data.samples;
-        var metadata = data.metadata;
+       
         
     // 4. Create a variable that filters the samples for the object with the desired sample number.
-        var filteredSample = samples.filter(sampleName => sampleName.id == sample)[0]
+        var filteredSample = samples.filter(sampleName => sampleName.id == sample)[0];
     //  5. Create a variable that holds the first sample in the array.
-        //var filteredMetaSample = metadata.filter(sampleName => sampleName.id == sample)[0]
+        var filteredMetaSample = filteredSample[0];
 
 
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
-        let otu_ids = filteredSample.otu_ids
-        let otu_labels = filteredSample.otu_labels
-        let sample_values = filteredSample.sample_values
+        let otu_ids = filteredSample.otu_ids;
+        let otu_labels = filteredSample.otu_labels;
+        let sample_values = filteredSample.sample_values;
 
         console.log(otu_ids)
         console.log(otu_labels)
         console.log(sample_values)
-
+    // =================Bar chart==========================================================
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
 
-     var yticks = otu_ids.slice(0,10).map(otuID => 'OTU${otuID}').reverse()
+     var yticksbar = otu_ids.slice(0,10).map(otuID => `OTU${otuID}`).reverse()
       console.log(yticks)
     // 8. Create the trace for the bar chart. 
     var barData = [
       {
-        y:yticks,
+        y:yticksbar,
         x:sample_values.slice(0,10).reverse(),
         text:otu_labels.slice(0,10).reverse(),
         type: 'bar',
@@ -96,26 +96,56 @@ function buildCharts(sample) {
     ];
     // 9. Create the layout for the bar chart. 
     var barLayout = {
-      title: 'top 10 OTU',
+      title: 'Top 10 OTU',
 
       xaxis:{
-        //tickangle:0,
-        //zeroline:true,
+
         title:"Sample Value",
       },
       yaxis:{
-        //zeroline:true,
-        //gridwidth:1,
+   
         title:"OTU ID"
       },
-      //height:370,
-      //width:750,
       margin:{t:100,l:100,b:100,r:100},
-      //barmode:'stack',
-      //paper_bgcolor: "lavender",
+
 
     };
     // 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar",barData,barLayout);
+    //===========End Bar chart========================================
+
+    //===========Buble Chart==========================================
+  // 1. Create the trace for the bubble chart.
+  let xticksBubble = otu_ids.slice(0,10).map(OtuID => `OTU ${otuID}`).reverse();
+
+  var bubbleData = [
+    {
+    x: xticksBubble,
+    y: sample_values.slice(0,10).reverse(),
+    text: otu_labels.slice(0,10).reverse(),
+    mode:'markers',
+    marker:{
+      size:sample_values.slice(0,10).reverse()
+      }
+    },
+  ];
+
+// 2. Create the layout for the bubble chart.
+  var bubbleLayout = {
+    title: 'Bacteria Culture Per Sample',
+    xaxis:{
+      title: "OTU ID"
+    },
+    yaxis: {
+      title: "Sample Value"
+    },
+  
+  };
+
+// 3. Use Plotly to plot the data with the layout.
+Plotly.newPlot('buble',bubbleData,bubbleLayout); 
+  
   });
 }
+
+
